@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Travel Request</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="icon">✈️</div>
+      <h1>Travel Request</h1>
+      <p>Fill in your preferences and we'll find you the best deals</p>
+    </div>
+
+    <form id="travelForm">
+      <div class="form-group">
+        <label for="country">🌍 Destination Country</label>
+        <input type="text" id="country" placeholder="e.g. Thailand, Italy, UAE..." required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="travelDate">📅 Preferred Travel Date</label>
+        <input type="date" id="travelDate" required>
+      </div>
+
+      <div class="form-group">
+        <label for="travelers">👥 Number of Travelers</label>
+        <div class="stepper">
+          <button type="button" class="stepper-btn" onclick="adjustTravelers(-1)">−</button>
+          <input type="number" id="travelers" value="1" min="1" max="50" readonly>
+          <button type="button" class="stepper-btn" onclick="adjustTravelers(1)">+</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="budget">💰 Approximate Budget (per person, AMD)</label>
+        <div class="budget-options">
+          <button type="button" class="budget-btn" data-value="200000">200k</button>
+          <button type="button" class="budget-btn" data-value="500000">500k</button>
+          <button type="button" class="budget-btn" data-value="1000000">1M</button>
+          <button type="button" class="budget-btn" data-value="2000000">2M</button>
+          <button type="button" class="budget-btn" data-value="5000000">5M+</button>
+        </div>
+        <input type="number" id="budget" placeholder="Enter amount" required>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">📝 Additional Notes (optional)</label>
+        <textarea id="notes" placeholder="Any special requirements..." rows="3"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span>✈️ Send Request</span>
+      </button>
+    </form>
+
+    <div id="successMessage" class="success-message" style="display:none">
+      <div class="success-icon">✅</div>
+      <h2>Request Sent!</h2>
+      <p>Your request has been sent to all our partner agents. They will contact you via Telegram shortly!</p>
+      <button class="submit-btn" onclick="resetForm()">📤 Send Another Request</button>
+    </div>
+  </div>
+
+  <script>
+    let tg = null
+    if (window.Telegram?.WebApp) {
+      tg = window.Telegram.WebApp
+      tg.expand()
+      tg.ready()
+    }
+
+    // Set min date to today
+    document.getElementById('travelDate').min = new Date().toISOString().split('T')[0]
+
+    // Budget quick-select buttons
+    document.querySelectorAll('.budget-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.budget-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        document.getElementById('budget').value = btn.dataset.value
+      })
+    })
+
+    function adjustTravelers(delta) {
+      const input = document.getElementById('travelers')
+      const val = parseInt(input.value) + delta
+      if (val >= 1 && val <= 50) input.value = val
+    }
+
+    // Form submit
+    document.getElementById('travelForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const btn = document.getElementById('submitBtn')
+      btn.disabled = true
+      btn.innerHTML = '⏳ Sending...'
+
+      const data = {
+        country: document.getElementById('country').value.trim(),
+        travelDate: document.getElementById('travelDate').value,
+        travelers: parseInt(document.getElementById('travelers').value),
+        budget: parseInt(document.getElementById('budget').value),
+        notes: document.getElementById('notes').value.trim(),
+        clientName: tg?.initDataUnsafe?.user?.first_name || 'Anonymous',
+        telegramId: tg?.initDataUnsafe?.user?.id?.toString() || '',
+      }
+
+      try {
+        const res = await fetch('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        const result = await res.json()
+
+        if (result.success) {
+          document.getElementById('travelForm').style.display = 'none'
+          document.getElementById('successMessage').style.display = 'block'
+          if (tg) tg.close()
+        } else {
+          alert(result.error || 'Something went wrong')
+        }
+      } catch (err) {
+        alert('Network error. Please try again.')
+      } finally {
+        btn.disabled = false
+        btn.innerHTML = '✈️ Send Request'
+      }
+    })
+
+    function resetForm() {
+      document.getElementById('travelForm').reset()
+      document.getElementById('travelForm').style.display = 'block'
+      document.getElementById('successMessage').style.display = 'none'
+      document.getElementById('travelers').value = 1
+      document.querySelectorAll('.budget-btn').forEach(b => b.classList.remove('active'))
+    }
+  </script>
+</body>
+</html>

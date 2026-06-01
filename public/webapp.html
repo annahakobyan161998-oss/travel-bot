@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Request</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--tg-theme-bg-color, #fff);
+      color: var(--tg-theme-text-color, #000);
+      padding: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 22px; margin-bottom: 8px; }
+    p.sub { color: var(--tg-theme-hint-color, #999); font-size: 14px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--tg-theme-hint-color, #ddd);
+      border-radius: 8px;
+      font-size: 16px;
+      background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+      color: var(--tg-theme-text-color, #000);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--tg-theme-button-color, #2481cc);
+    }
+    textarea { resize: vertical; min-height: 60px; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--tg-theme-button-color, #2481cc);
+      color: var(--tg-theme-button-text-color, #fff);
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .row { display: flex; gap: 12px; }
+    .row .form-group { flex: 1; }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(0,0,0,0.05);
+    }
+    .hidden { display: none; }
+    #success {
+      text-align: center;
+      padding: 40px 16px;
+    }
+    #success h2 { font-size: 24px; margin-bottom: 8px; }
+    #success .check { font-size: 64px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div id="form">
+    <h1 id="title">✈️ Travel Request</h1>
+    <p class="sub" id="subtitle">Fill in the details and send your request to tour agents</p>
+
+    <div class="form-group">
+      <label id="lbl-country">Country</label>
+      <select id="country" required>
+        <option value="">-- Select --</option>
+        <option value="UAE">🇦🇪 UAE / Dubai</option>
+        <option value="Turkey">🇹🇷 Turkey</option>
+        <option value="Egypt">🇪🇬 Egypt</option>
+        <option value="Georgia">🇬🇪 Georgia</option>
+        <option value="Greece">🇬🇷 Greece</option>
+        <option value="Italy">🇮🇹 Italy</option>
+        <option value="Spain">🇪🇸 Spain</option>
+        <option value="France">🇫🇷 France</option>
+        <option value="Thailand">🇹🇭 Thailand</option>
+        <option value="Maldives">🇲🇻 Maldives</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label id="lbl-weekend">Weekend Dates</label>
+        <input type="date" id="weekend_start">
+      </div>
+      <div class="form-group">
+        <label id="lbl-to">&nbsp;</label>
+        <input type="date" id="weekend_end">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label id="lbl-flight">Flight Date</label>
+      <input type="date" id="flight_date">
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label id="lbl-people">People</label>
+        <input type="number" id="people_count" min="1" max="100" value="1">
+      </div>
+      <div class="form-group">
+        <label id="lbl-budget">Budget (USD)</label>
+        <input type="number" id="budget" min="0" step="100" placeholder="e.g. 1000">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label id="lbl-notes">Notes</label>
+      <textarea id="notes" placeholder="Any special requests..."></textarea>
+    </div>
+
+    <button class="btn" id="submitBtn" onclick="submitRequest()">🔍 Send Request</button>
+  </div>
+
+  <div id="success" class="hidden">
+    <div class="check">✅</div>
+    <h2 id="success-title">Request Sent!</h2>
+    <p id="success-text">Your request has been sent to all tour agents. You will receive responses here in Telegram.</p>
+    <button class="btn" onclick="Telegram.WebApp.close()">Close</button>
+  </div>
+
+  <script>
+    let tg = window.Telegram?.WebApp;
+    let userId = null;
+    let lang = 'en';
+
+    const translations = {
+      hy: {
+        title: '✈️ Ուղևորություն',
+        subtitle: 'Լրացրեք տվյալները և ուղարկեք տուր ագենտներին',
+        country: 'Երկիր',
+        weekend: 'Հանգստյան օրեր',
+        to: 'մինչև',
+        flight: 'Թռիչքի ամսաթիվ',
+        people: 'Անձ',
+        budget: 'Բյուջե (USD)',
+        notes: 'Նշումներ',
+        submit: '🔍 Ուղարկել հայտ',
+        successTitle: 'Հայտն ուղարկված է:',
+        successText: 'Ձեր հայտն ուղարկվել է տուր ագենտներին: Պատասխանը կստանաք Telegram-ում:',
+        close: 'Փակել',
+      },
+      en: {
+        title: '✈️ Travel Request',
+        subtitle: 'Fill in the details and send to tour agents',
+        country: 'Country',
+        weekend: 'Weekend Dates',
+        to: 'to',
+        flight: 'Flight Date',
+        people: 'People',
+        budget: 'Budget (USD)',
+        notes: 'Notes',
+        submit: '🔍 Send Request',
+        successTitle: 'Request Sent!',
+        successText: 'Your request has been sent to all tour agents. You will receive responses here in Telegram.',
+        close: 'Close',
+      },
+      ru: {
+        title: '✈️ Заявка на поездку',
+        subtitle: 'Заполните данные и отправьте тур агентам',
+        country: 'Страна',
+        weekend: 'Выходные дни',
+        to: 'до',
+        flight: 'Дата вылета',
+        people: 'Человек',
+        budget: 'Бюджет (USD)',
+        notes: 'Заметки',
+        submit: '🔍 Отправить заявку',
+        successTitle: 'Заявка отправлена!',
+        successText: 'Ваша заявка отправлена всем тур агентам. Ответ придёт в Telegram.',
+        close: 'Закрыть',
+      },
+    };
+
+    function applyLang(l) {
+      const t = translations[l] || translations.en;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('subtitle').textContent = t.subtitle;
+      document.getElementById('lbl-country').textContent = t.country;
+      document.getElementById('lbl-weekend').textContent = t.weekend;
+      document.getElementById('lbl-to').textContent = t.to;
+      document.getElementById('lbl-flight').textContent = t.flight;
+      document.getElementById('lbl-people').textContent = t.people;
+      document.getElementById('lbl-budget').textContent = t.budget;
+      document.getElementById('lbl-notes').textContent = t.notes;
+      document.getElementById('submitBtn').textContent = t.submit;
+      document.getElementById('success-title').textContent = t.successTitle;
+      document.getElementById('success-text').textContent = t.successText;
+    }
+
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    userId = params.get('user_id');
+    lang = params.get('lang') || 'en';
+    applyLang(lang);
+
+    // Set today as default dates
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('weekend_start').value = today;
+    document.getElementById('flight_date').value = today;
+
+    if (tg) {
+      tg.expand();
+      tg.ready();
+    }
+
+    async function submitRequest() {
+      const country = document.getElementById('country').value;
+      if (!country) {
+        alert(translations[lang].country + ' is required');
+        return;
+      }
+
+      const data = {
+        telegram_id: Number(userId),
+        country,
+        weekend_dates: document.getElementById('weekend_start').value + ' / ' + document.getElementById('weekend_end').value,
+        flight_date: document.getElementById('flight_date').value,
+        people_count: Number(document.getElementById('people_count').value) || 1,
+        budget: document.getElementById('budget').value,
+        notes: document.getElementById('notes').value,
+        first_name: tg?.initDataUnsafe?.user?.first_name || 'User',
+      };
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Sending...';
+
+      try {
+        const res = await fetch('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          document.getElementById('form').classList.add('hidden');
+          document.getElementById('success').classList.remove('hidden');
+          if (tg) tg.sendData(JSON.stringify({ action: 'sent', request_id: (await res.json()).request_id }));
+        } else {
+          alert('Error sending request. Please try again.');
+          btn.disabled = false;
+          btn.textContent = translations[lang].submit;
+        }
+      } catch (e) {
+        alert('Network error. Please try again.');
+        btn.disabled = false;
+        btn.textContent = translations[lang].submit;
+      }
+    }
+  </script>
+</body>
+</html>

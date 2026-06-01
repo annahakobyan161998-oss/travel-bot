@@ -1,0 +1,222 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: var(--tg-theme-bg-color, #1a1a2e);
+  --text: var(--tg-theme-text-color, #e0e0e0);
+  --hint: var(--tg-theme-hint-color, #888);
+  --accent: var(--tg-theme-button-color, #6366F1);
+  --accent-text: var(--tg-theme-button-text-color, #fff);
+  --card: var(--tg-theme-secondary-bg-color, #16213e);
+  --border: rgba(255,255,255,0.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.header .icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.header p {
+  font-size: 14px;
+  color: var(--hint);
+  line-height: 1.4;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--hint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+  -webkit-appearance: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--accent);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 70px;
+  font-family: inherit;
+}
+
+/* Stepper */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepper input {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  width: 80px;
+  pointer-events: none;
+}
+
+.stepper-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.stepper-btn:active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* Budget quick-select */
+.budget-options {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.budget-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 60px;
+  text-align: center;
+}
+
+.budget-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.budget-btn:active {
+  transform: scale(0.95);
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.submit-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Success */
+.success-message {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.success-message h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.success-message p {
+  font-size: 14px;
+  color: var(--hint);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* Input[type=date] - hide default arrow on some browsers */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+/* Remove number input arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}

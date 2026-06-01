@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Bot Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login -->
+  <div id="loginScreen" class="screen">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h1>Admin Panel</h1>
+      <p>Travel Request Bot — Management Dashboard</p>
+      <div class="form-group">
+        <input type="password" id="passwordInput" placeholder="Enter admin password" autofocus>
+      </div>
+      <div id="loginError" class="error-msg"></div>
+      <button class="btn btn-primary" id="loginBtn" onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboardScreen" class="screen" style="display:none">
+    <header>
+      <h1>📊 Admin Dashboard</h1>
+      <button class="btn btn-ghost" onclick="logout()">Logout</button>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="overview" onclick="switchTab('overview')">📈 Overview</button>
+      <button class="tab" data-tab="requests" onclick="switchTab('requests')">📋 Requests</button>
+      <button class="tab" data-tab="agents" onclick="switchTab('agents')">👥 Agents</button>
+    </nav>
+
+    <!-- Overview Tab -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-value" id="statTotalRequests">0</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="statTotalAgents">0</div>
+          <div class="stat-label">Total Agents</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-value" id="statTodayRequests">0</div>
+          <div class="stat-label">Requests Today</div>
+        </div>
+      </div>
+      <div class="section">
+        <h3>Recent Requests</h3>
+        <div id="recentRequestsList" class="request-list"></div>
+      </div>
+    </div>
+
+    <!-- Requests Tab -->
+    <div id="tab-requests" class="tab-content">
+      <div class="section-header">
+        <h3>All Requests</h3>
+        <div class="search-box">
+          <input type="text" id="requestsSearch" placeholder="Search by country, client..." oninput="filterRequests()">
+        </div>
+      </div>
+      <div id="requestsCount" class="count-badge"></div>
+      <div id="requestsList" class="request-list"></div>
+    </div>
+
+    <!-- Agents Tab -->
+    <div id="tab-agents" class="tab-content">
+      <div class="section-header">
+        <h3>Registered Agents</h3>
+      </div>
+      <div id="agentsCount" class="count-badge"></div>
+      <div id="agentsList" class="agent-list"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
