@@ -26,10 +26,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// ── Root health check (required for Railway) ──
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Travel Bot is running' });
+});
+
 // ── User state store ──
 const userStates = new Map();
 
-// ── Initialize DB then start ──
+// ── Start Express immediately (Railway health check) ──
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+});
+
+// ── Initialize DB, then attach routes ──
 require('./db').then(({ stmts }) => {
 
 // ── Serve Web App ──
@@ -269,16 +279,12 @@ bot.on('message', async (msg) => {
   }
 });
 
-  // ── Start server ──
-  app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
-    console.log(`🤖 Bot polling started...`);
-    console.log(`🌐 Web App URL: ${WEBAPP_URL}/webapp`);
-    console.log(`\n📌 To use Web App:`);
-    console.log(`   1. Set WEBAPP_URL in .env to your public HTTPS URL (use ngrok for testing)`);
-    console.log(`   2. Go to @BotFather → /mybots → your bot → Bot Settings → Menu Button → Web App URL`);
-    console.log(`   3. Set the URL to ${WEBAPP_URL}/webapp`);
-  });
+  // ── Ready ──
+  console.log(`🤖 Bot polling started...`);
+  console.log(`🌐 Web App URL: ${WEBAPP_URL}/webapp`);
+  console.log(`\n📌 To use Web App:`);
+  console.log(`   1. Go to @BotFather → /mybots → your bot → Bot Settings → Menu Button`);
+  console.log(`   2. Set URL to ${WEBAPP_URL}/webapp`);
 }).catch(err => {
   console.error('Failed to initialize DB:', err);
   process.exit(1);
