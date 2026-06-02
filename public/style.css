@@ -1,18 +1,19 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: var(--tg-theme-bg-color, #1a1a2e);
-  --text: var(--tg-theme-text-color, #e0e0e0);
-  --hint: var(--tg-theme-hint-color, #888);
-  --accent: var(--tg-theme-button-color, #6366F1);
-  --accent-text: var(--tg-theme-button-text-color, #fff);
-  --card: var(--tg-theme-secondary-bg-color, #16213e);
-  --border: rgba(255,255,255,0.08);
+  --bg: #4A148C;
+  --text: #FFFFFF;
+  --hint: rgba(255, 255, 255, 0.55);
+  --accent: #00E5FF;
+  --accent2: #9B51E0;
+  --accent-text: #4A148C;
+  --card: rgba(74, 20, 140, 0.6);
+  --border: rgba(224, 242, 241, 0.1);
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
+  background: linear-gradient(160deg, #7B1FA2 0%, #4A148C 100%);
   color: var(--text);
   min-height: 100vh;
   padding: 0;
@@ -39,6 +40,10 @@ body {
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 6px;
+  background: linear-gradient(135deg, #00E5FF, #9B51E0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .header p {
@@ -67,7 +72,7 @@ input[type="date"],
 textarea {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: 12px;
   background: var(--card);
   color: var(--text);
@@ -79,6 +84,7 @@ textarea {
 
 input:focus, textarea:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
 }
 
 textarea {
@@ -120,7 +126,7 @@ textarea {
 .stepper-btn:active {
   background: var(--accent);
   border-color: var(--accent);
-  color: var(--accent-text);
+  color: var(--bg);
 }
 
 /* Budget quick-select */
@@ -147,9 +153,9 @@ textarea {
 }
 
 .budget-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-text);
+  background: linear-gradient(135deg, #00E5FF, #9B51E0);
+  border-color: transparent;
+  color: #FFFFFF;
 }
 
 .budget-btn:active {
@@ -162,8 +168,8 @@ textarea {
   padding: 16px;
   border: none;
   border-radius: 14px;
-  background: var(--accent);
-  color: var(--accent-text);
+  background: #FFFFFF;
+  color: #4A148C;
   font-size: 17px;
   font-weight: 700;
   cursor: pointer;
@@ -196,6 +202,10 @@ textarea {
 .success-message h2 {
   font-size: 22px;
   margin-bottom: 12px;
+  background: linear-gradient(135deg, #00E5FF, #9B51E0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .success-message p {
@@ -207,7 +217,7 @@ textarea {
 
 /* Input[type=date] - hide default arrow on some browsers */
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.7);
+  filter: invert(1) hue-rotate(180deg);
   cursor: pointer;
 }
 

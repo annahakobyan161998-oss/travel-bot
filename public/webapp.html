@@ -12,61 +12,84 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      background: linear-gradient(145deg, #7B1FA2 0%, #4A148C 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
       position: relative;
       overflow-x: hidden;
     }
 
-    /* Animated background particles */
+    /* Desk surface texture overlay */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.3), transparent),
-        radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.2), transparent),
-        radial-gradient(2px 2px at 60% 40%, rgba(255,255,255,0.3), transparent),
-        radial-gradient(2px 2px at 80% 10%, rgba(255,255,255,0.2), transparent),
-        radial-gradient(2px 2px at 10% 80%, rgba(255,255,255,0.15), transparent),
-        radial-gradient(2px 2px at 70% 90%, rgba(255,255,255,0.2), transparent),
-        radial-gradient(2px 2px at 50% 20%, rgba(255,255,255,0.25), transparent);
-      animation: twinkle 4s ease-in-out infinite alternate;
+        radial-gradient(circle at 15% 85%, rgba(224, 242, 241, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(0, 229, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(155, 81, 224, 0.04) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    @keyframes twinkle {
-      0% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-
+    /* Tablet bezel case */
     .card {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 32px 24px;
+      background: rgba(74, 20, 140, 0.85);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border-radius: 28px;
+      padding: 4px;
       width: 100%;
       max-width: 440px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+      box-shadow:
+        0 30px 80px rgba(74, 20, 140, 0.5),
+        0 0 0 1px rgba(224, 242, 241, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
       position: relative;
       z-index: 1;
+    }
+
+    /* Screen surface with gradient border */
+    .screen {
+      background: rgba(16, 4, 36, 0.6);
+      border-radius: 24px;
+      padding: 28px 24px;
+      position: relative;
+      border: 1px solid rgba(0, 229, 255, 0.15);
       animation: fadeIn 0.6s ease-out;
     }
 
+    /* Gradient top accent line */
+    .screen::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, #00E5FF, #9B51E0, #00E5FF);
+      background-size: 200% 100%;
+      animation: gradientSlide 3s ease-in-out infinite;
+      border-radius: 0 0 2px 2px;
+    }
+
+    @keyframes gradientSlide {
+      0%, 100% { background-position: 0% 0%; }
+      50% { background-position: 100% 0%; }
+    }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Header with gradient text */
     .header {
       text-align: center;
       margin-bottom: 28px;
+      padding-top: 8px;
     }
 
     .header-icon {
@@ -84,71 +107,74 @@
     h1 {
       font-size: 24px;
       font-weight: 800;
-      color: #fff;
+      background: linear-gradient(135deg, #00E5FF, #9B51E0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       letter-spacing: -0.5px;
       margin-bottom: 6px;
     }
 
     .subtitle {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
       font-weight: 400;
     }
 
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     label {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 6px;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 5px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    label .emoji { font-size: 15px; }
+    label .emoji { font-size: 14px; }
 
     input, select, textarea {
       width: 100%;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      padding: 13px 16px;
+      background: rgba(224, 242, 241, 0.04);
+      border: 1.5px solid rgba(224, 242, 241, 0.08);
       border-radius: 14px;
       font-size: 15px;
       font-family: 'Inter', sans-serif;
-      color: #fff;
+      color: #FFFFFF;
       outline: none;
       transition: all 0.3s ease;
     }
 
     input:hover, select:hover, textarea:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(224, 242, 241, 0.07);
+      border-color: rgba(224, 242, 241, 0.15);
     }
 
     input:focus, select:focus, textarea:focus {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: #6c63ff;
-      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+      background: rgba(0, 229, 255, 0.04);
+      border-color: #00E5FF;
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
     }
 
     select option {
-      background: #1a1a2e;
-      color: #fff;
+      background: #4A148C;
+      color: #FFFFFF;
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 76px;
     }
 
     input::placeholder, textarea::placeholder {
-      color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.25);
     }
 
     .row {
@@ -162,16 +188,17 @@
       opacity: 1;
     }
 
+    /* Stylus-inspired white button */
     .btn {
       width: 100%;
       padding: 16px;
-      background: linear-gradient(135deg, #6c63ff, #4834d4);
+      background: #FFFFFF;
       border: none;
       border-radius: 16px;
       font-size: 16px;
       font-weight: 700;
       font-family: 'Inter', sans-serif;
-      color: #fff;
+      color: #4A148C;
       cursor: pointer;
       transition: all 0.3s ease;
       margin-top: 8px;
@@ -183,7 +210,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+      background: linear-gradient(135deg, transparent 30%, rgba(74, 20, 140, 0.08) 50%, transparent 70%);
       transform: translateX(-100%);
       transition: transform 0.6s;
     }
@@ -192,7 +219,7 @@
 
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+      box-shadow: 0 8px 30px rgba(0, 229, 255, 0.3);
     }
 
     .btn:active {
@@ -207,9 +234,10 @@
 
     .hidden { display: none; }
 
+    /* Success state - also in tablet style */
     #success {
       text-align: center;
-      padding: 20px 16px;
+      padding: 20px 4px;
       animation: fadeIn 0.5s ease-out;
     }
 
@@ -227,13 +255,28 @@
     #success h2 {
       font-size: 26px;
       margin-bottom: 8px;
+      background: linear-gradient(135deg, #00E5FF, #9B51E0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     #success p {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.6);
       font-size: 15px;
       line-height: 1.6;
       margin-bottom: 24px;
+    }
+
+    #success .btn {
+      background: linear-gradient(135deg, #00E5FF, #9B51E0);
+      color: #FFFFFF;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    #success .btn:hover {
+      box-shadow: 0 8px 30px rgba(155, 81, 224, 0.4);
     }
 
     /* Loading spinner */
@@ -241,8 +284,8 @@
       display: inline-block;
       width: 20px;
       height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
+      border: 2px solid rgba(74, 20, 140, 0.2);
+      border-top-color: #4A148C;
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
       vertical-align: middle;
@@ -256,7 +299,7 @@
     /* Custom select arrow */
     select {
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300E5FF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 16px center;
       padding-right: 44px;
@@ -264,80 +307,95 @@
 
     /* Date input dark theme fix */
     input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
+      filter: invert(1) hue-rotate(180deg);
       cursor: pointer;
+    }
+
+    /* Desk surface decorative line */
+    .desk-line {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #E0F2F1, transparent);
+      opacity: 0.15;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <div class="card" id="form">
-    <div class="header">
-      <span class="header-icon">✈️</span>
-      <h1 id="title">Travel Request</h1>
-      <p class="subtitle" id="subtitle">Fill in the details and send to tour agents</p>
-    </div>
-
-    <div class="form-group">
-      <label><span class="emoji">🌍</span> <span id="lbl-country">Destination</span></label>
-      <select id="country" required>
-        <option value="">— Select a country —</option>
-        <option value="UAE">🇦🇪 UAE / Dubai</option>
-        <option value="Turkey">🇹🇷 Turkey</option>
-        <option value="Egypt">🇪🇬 Egypt</option>
-        <option value="Georgia">🇬🇪 Georgia</option>
-        <option value="Greece">🇬🇷 Greece</option>
-        <option value="Italy">🇮🇹 Italy</option>
-        <option value="Spain">🇪🇸 Spain</option>
-        <option value="France">🇫🇷 France</option>
-        <option value="Thailand">🇹🇭 Thailand</option>
-        <option value="Maldives">🇲🇻 Maldives</option>
-        <option value="other">📍 Other</option>
-      </select>
-    </div>
-
-    <div class="row">
-      <div class="form-group">
-        <label><span class="emoji">📅</span> <span id="lbl-weekend">Weekend start</span></label>
-        <input type="date" id="weekend_start">
+  <div class="desk-line"></div>
+  <div class="card">
+    <div class="screen" id="form">
+      <div class="header">
+        <span class="header-icon">✈️</span>
+        <h1 id="title">Travel Request</h1>
+        <p class="subtitle" id="subtitle">Fill in the details and send to tour agents</p>
       </div>
+
       <div class="form-group">
-        <label>&nbsp; <span id="lbl-to">to</span></label>
-        <input type="date" id="weekend_end">
+        <label><span class="emoji">🌍</span> <span id="lbl-country">Destination</span></label>
+        <select id="country" required>
+          <option value="">— Select a country —</option>
+          <option value="UAE">🇦🇪 UAE / Dubai</option>
+          <option value="Turkey">🇹🇷 Turkey</option>
+          <option value="Egypt">🇪🇬 Egypt</option>
+          <option value="Georgia">🇬🇪 Georgia</option>
+          <option value="Greece">🇬🇷 Greece</option>
+          <option value="Italy">🇮🇹 Italy</option>
+          <option value="Spain">🇪🇸 Spain</option>
+          <option value="France">🇫🇷 France</option>
+          <option value="Thailand">🇹🇭 Thailand</option>
+          <option value="Maldives">🇲🇻 Maldives</option>
+          <option value="other">📍 Other</option>
+        </select>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label><span class="emoji">✈️</span> <span id="lbl-flight">Flight date</span></label>
-      <input type="date" id="flight_date">
-    </div>
+      <div class="row">
+        <div class="form-group">
+          <label><span class="emoji">📅</span> <span id="lbl-weekend">Weekend start</span></label>
+          <input type="date" id="weekend_start">
+        </div>
+        <div class="form-group">
+          <label>&nbsp; <span id="lbl-to">to</span></label>
+          <input type="date" id="weekend_end">
+        </div>
+      </div>
 
-    <div class="row">
       <div class="form-group">
-        <label><span class="emoji">👥</span> <span id="lbl-people">Travelers</span></label>
-        <input type="number" id="people_count" min="1" max="100" value="1">
+        <label><span class="emoji">✈️</span> <span id="lbl-flight">Flight date</span></label>
+        <input type="date" id="flight_date">
       </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label><span class="emoji">👥</span> <span id="lbl-people">Travelers</span></label>
+          <input type="number" id="people_count" min="1" max="100" value="1">
+        </div>
+        <div class="form-group">
+          <label><span class="emoji">💰</span> <span id="lbl-budget">Budget (USD)</span></label>
+          <input type="number" id="budget" min="0" step="100" placeholder="e.g. 1000">
+        </div>
+      </div>
+
       <div class="form-group">
-        <label><span class="emoji">💰</span> <span id="lbl-budget">Budget (USD)</span></label>
-        <input type="number" id="budget" min="0" step="100" placeholder="e.g. 1000">
+        <label><span class="emoji">📝</span> <span id="lbl-notes">Notes</span></label>
+        <textarea id="notes" placeholder="Any special requests, preferences, or requirements…" rows="3"></textarea>
       </div>
+
+      <button class="btn" id="submitBtn">
+        <span id="btn-text">🚀 Send Request</span>
+      </button>
     </div>
 
-    <div class="form-group">
-      <label><span class="emoji">📝</span> <span id="lbl-notes">Notes</span></label>
-      <textarea id="notes" placeholder="Any special requests, preferences, or requirements…" rows="3"></textarea>
-    </div>
-
-    <button class="btn" id="submitBtn">
-      <span id="btn-text">🚀 Send Request</span>
-    </button>
-  </div>
-
-  <div id="success" class="hidden">
-    <div class="card">
-      <div class="check">✅</div>
-      <h2 id="success-title">Request Sent!</h2>
-      <p id="success-text">Your request has been sent to all tour agents. You'll receive responses directly in Telegram.</p>
-      <button class="btn" onclick="Telegram.WebApp.close()">✓ Close</button>
+    <div id="success" class="hidden">
+      <div class="screen">
+        <div class="check">✅</div>
+        <h2 id="success-title">Request Sent!</h2>
+        <p id="success-text">Your request has been sent to all tour agents. You'll receive responses directly in Telegram.</p>
+        <button class="btn" onclick="Telegram.WebApp.close()">✓ Close</button>
+      </div>
     </div>
   </div>
 
